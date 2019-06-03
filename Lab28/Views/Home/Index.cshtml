@@ -1,0 +1,34 @@
+﻿<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    var deck = "";
+    function getDeck() {
+        $.ajax({
+            method: "GET",
+            url: "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1",
+            success: function (result) {
+                deck = result.deck_id;
+                displayCards();
+            }
+        });
+    }
+
+    function displayCards() {
+        $.ajax({
+            method: "GET",
+            url: "https://deckofcardsapi.com/api/deck/" + deck + "/draw/?count=5",
+            success: function (result) {
+                $("tr").empty()
+                $.each(result.cards, function (i, c) {
+                    $("#image").append("<th><img src='" + c.image + "' width='30%' height='30%'></th>")
+                    $("#card").append("<td>" + c.value + " of " + c.suit + "</td>")
+                });
+            }
+        })
+    }
+</script>
+<button onclick="getDeck()">New deck</button>
+
+<table>
+    <tr id="image"></tr>
+    <tr id="card"></tr>
+</table>
